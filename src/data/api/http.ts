@@ -1,0 +1,69 @@
+import { ok, err } from "neverthrow";
+import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import { Dependency } from "src/core/di/dependency";
+import type { NetworkResponse } from "src/data/api";
+
+export abstract class HttpClient extends Dependency {
+  protected http: AxiosInstance;
+
+  constructor(options: AxiosRequestConfig) {
+    super();
+    this.http = axios.create({
+      baseURL: import.meta.env.VITE_API_URL,
+      ...options,
+    });
+  }
+
+  delete<T = void>(url: string, params?: URLSearchParams): NetworkResponse<T> {
+    return this.request<T>({
+      method: "delete",
+      params,
+      url,
+    });
+  }
+
+  get<T = void>(url: string, params?: URLSearchParams): NetworkResponse<T> {
+    return this.request<T>({
+      method: "get",
+      params,
+      url,
+    });
+  }
+
+  post<T = void>(url: string, data?: object): NetworkResponse<T> {
+    return this.request<T>({
+      data,
+      method: "post",
+      url,
+    });
+  }
+
+  patch<T = void>(url: string, data?: object): NetworkResponse<T> {
+    return this.request<T>({
+      data,
+      method: "patch",
+      url,
+    });
+  }
+
+  put<T = void>(url: string, data?: object): NetworkResponse<T> {
+    return this.request<T>({
+      data,
+      method: "put",
+      url,
+    });
+  }
+
+  private async request<T>(req: AxiosRequestConfig): NetworkResponse<T> {
+    try {
+      const response = await this.http.request<T>(req);
+      if (response.status >= 200 && response.status <= 299) {
+        return ok(response.data);
+      } else {
+        return err(new Error(response.statusText));
+      }
+    } catch (error) {
+      return err(error as Error);
+    }
+  }
+}
