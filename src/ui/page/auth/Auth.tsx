@@ -23,11 +23,16 @@ const authValidationSchema = Yup.object().shape({
 
 function Auth(): JSX.Element {
   const service = useDependency<AuthService>(AuthService.dependencyId());
-  const { isPending } = service;
+  const { isPending, isSuccess, isError, errors } = service;
 
-  function login(): void {
+  function login() {
     service.login();
-    // redirect(Route.dashboard);
+    if (isError) {
+      console.log({ errors });
+    }
+    if (isSuccess) {
+      redirect(Route.dashboard);
+    }
   }
 
   return (
@@ -48,15 +53,19 @@ function Auth(): JSX.Element {
             login();
           }}
         >
-          {({ errors, touched }) => (
+          {({ errors: formErrors, touched }) => (
             <Form>
               <Field name="login" type="text" />
-              {errors.login && touched.login && <div>{errors.login}</div>}
+              {formErrors.login && touched.login && (
+                <div>{formErrors.login}</div>
+              )}
               <Field name="email" type="email" />
-              {errors.email && touched.email && <div>{errors.email}</div>}
+              {formErrors.email && touched.email && (
+                <div>{formErrors.email}</div>
+              )}
               <Field name="password" type="password" />
-              {errors.password && touched.password && (
-                <div>{errors.password}</div>
+              {formErrors.password && touched.password && (
+                <div>{formErrors.password}</div>
               )}
               <button type="submit" disabled={isPending}>
                 Submit

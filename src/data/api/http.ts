@@ -1,7 +1,7 @@
 import { ok, err } from "neverthrow";
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import { Dependency } from "src/core/di/dependency";
-import type { NetworkResponse } from "src/data/api";
+import type { NetworkResponse, NetworkResponseErrors } from "src/data/api";
 
 export abstract class HttpClient extends Dependency {
   protected http: AxiosInstance;
@@ -60,10 +60,11 @@ export abstract class HttpClient extends Dependency {
       if (response.status >= 200 && response.status <= 299) {
         return ok(response.data);
       } else {
-        return err(new Error(response.statusText));
+        return err(response.data as NetworkResponseErrors);
       }
     } catch (error) {
-      return err(error as Error);
+      console.error(error);
+      return err({ errors: [] });
     }
   }
 }

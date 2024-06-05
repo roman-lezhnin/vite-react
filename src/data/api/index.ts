@@ -1,4 +1,12 @@
 import type { Result } from "neverthrow";
 
-export type NetworkResponseResult<T = void> = Result<T, Error>;
-export type NetworkResponse<T = void> = Promise<NetworkResponseResult<T>>;
+export type NetworkResponseErrors = { errors: string[] };
+
+export type NetworkResponseResult<NetworkResponseBody = void> = Result<
+  NetworkResponseBody,
+  NetworkResponseErrors
+>;
+
+export type NetworkResponse<NetworkResponseBody = void> = Promise<
+  NetworkResponseResult<NetworkResponseBody>
+>;

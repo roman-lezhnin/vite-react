@@ -2,8 +2,8 @@ import { observable, flow } from "mobx";
 import { ServiceViewModel } from "src/service";
 import { inject } from "src/core/di/container";
 import { AuthRepository } from "src/data/repository/auth";
-import type { NetworkResponseResult } from "src/data/api";
-import { debugMethod } from "src/core/utils/debug";
+import type { ServiceResponse } from "src/service/utils/types";
+import type { AuthResponse } from "src/data/api/res/auth/auth";
 
 type AuthFormData = {
   login: string;
@@ -19,6 +19,7 @@ export class AuthService extends ServiceViewModel {
   readonly repository!: AuthRepository;
 
   @observable accessor isAuth: boolean = false;
+  @observable accessor jwt: string = "";
 
   @observable accessor formData: AuthFormData = {
     login: "",
@@ -32,20 +33,28 @@ export class AuthService extends ServiceViewModel {
   }
 
   @flow
-  @debugMethod
-  *login() {
+  *login(): ServiceResponse<AuthResponse> {
     this.pending();
-    this.isAuth = true;
-    const response: NetworkResponseResult = yield this.repository.login();
-    response.map(this.success).mapErr(this.error);
+    const response = yield this.repository.login();
+    response
+      .map(({ jwt }) => {
+        this.jwt = jwt;
+        this.isAuth = true;
+        this.onSuccess();
+      })
+      .mapErr(this.onError);
   }
 
   @flow
-  @debugMethod
-  *logout() {
+  *logout(): ServiceResponse {
     this.pending();
-    this.isAuth = false;
-    const response: NetworkResponseResult = yield this.repository.logout();
-    response.map(this.success).mapErr(this.error);
+    const response = yield this.repository.logout();
+    response
+      .map(() => {
+        this.jwt = "";
+        this.isAuth = false;
+        this.onSuccess();
+      })
+      .mapErr(this.onError);
   }
 }

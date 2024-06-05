@@ -1,6 +1,7 @@
 import { observable, computed, action } from "mobx";
 import { Dependency } from "src/core/di/dependency";
 import type { Repository } from "src/data/repository";
+import type { NetworkResponseErrors } from "src/data/api";
 
 export abstract class Service extends Dependency {
   abstract readonly repository: Repository;
@@ -38,16 +39,21 @@ export class ServiceViewModel extends Service {
     this.errors = [];
   }
 
-  @action.bound success(): void {
-    this.state = "success";
-    this.errors = [];
-  }
-
   @action.bound error(): void {
     this.state = "error";
   }
 
   @action.bound setErrors(errors: string[]): void {
     this.errors = errors;
+  }
+
+  @action.bound onError({ errors }: NetworkResponseErrors): void {
+    this.error();
+    this.setErrors(errors);
+  }
+
+  @action.bound onSuccess(): void {
+    this.state = "success";
+    this.errors = [];
   }
 }
