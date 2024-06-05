@@ -1,13 +1,25 @@
-import React from "react";
 import * as Yup from "yup";
+import React, { useMemo } from "react";
 import { observer } from "mobx-react-lite";
 import { redirect } from "react-router-dom";
-import { Formik, Form, Field } from "formik";
+import { Formik, Form, Field, FormikErrors } from "formik";
 import { useDependency } from "src/core/di/container";
+import { AuthError } from "src/data/api/error/AuthError";
 import { AuthService } from "src/service/auth";
 import { Route } from "src/ui/router/path";
+import { mapErrors } from "src/ui/component/map-errors";
+import FieldError from "src/ui/component/field-error";
+import styles from "./Auth.module.css";
 
-const authValidationSchema = Yup.object().shape({
+type AuthFormData = {
+  login: string;
+  email: string;
+  password: string;
+};
+type AuthFormErrors = FormikErrors<AuthFormData>;
+
+const initialValues: AuthFormData = { login: "", email: "", password: "" };
+const validationSchema = Yup.object().shape({
   login: Yup.string()
     .min(2, "Too Short!")
     .max(50, "Too Long!")
@@ -23,49 +35,51 @@ const authValidationSchema = Yup.object().shape({
 
 function Auth(): JSX.Element {
   const service = useDependency<AuthService>(AuthService.dependencyId());
-  const { isPending, isSuccess, isError, errors } = service;
+  const { isPending, isSuccess, errors } = service;
 
-  function login() {
-    service.login();
-    if (isError) {
-      console.log({ errors });
-    }
+  const apiErrors = useMemo(
+    () => mapErrors<AuthFormErrors>(errors, keySelector),
+    [errors],
+  );
+
+  async function onSubmit({ login, email, password }: AuthFormData) {
+    await service.login(login, email, password);
     if (isSuccess) {
       redirect(Route.dashboard);
     }
   }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <nav>nav</nav>
-      </header>
+    <>
+      <header>Logo</header>
       <main>
         <Formik
-          initialValues={{
-            login: "login",
-            email: "email@email.ru",
-            password: "password",
-          }}
-          validationSchema={authValidationSchema}
-          onSubmit={(values) => {
-            console.log(values);
-            login();
-          }}
+          onSubmit={onSubmit}
+          initialValues={initialValues}
+          validationSchema={validationSchema}
         >
-          {({ errors: formErrors, touched }) => (
-            <Form>
+          {({ touched, errors: formErrors }) => (
+            <Form className={styles.form}>
               <Field name="login" type="text" />
-              {formErrors.login && touched.login && (
-                <div>{formErrors.login}</div>
+              {touched.login && (
+                <FieldError
+                  apiError={apiErrors.login}
+                  formError={formErrors.login}
+                />
               )}
               <Field name="email" type="email" />
-              {formErrors.email && touched.email && (
-                <div>{formErrors.email}</div>
+              {touched.email && (
+                <FieldError
+                  apiError={apiErrors.email}
+                  formError={formErrors.email}
+                />
               )}
               <Field name="password" type="password" />
-              {formErrors.password && touched.password && (
-                <div>{formErrors.password}</div>
+              {touched.password && (
+                <FieldError
+                  apiError={apiErrors.password}
+                  formError={formErrors.password}
+                />
               )}
               <button type="submit" disabled={isPending}>
                 Submit
@@ -74,8 +88,24 @@ function Auth(): JSX.Element {
           )}
         </Formik>
       </main>
-    </div>
+    </>
   );
+}
+
+function keySelector(error: string) {
+  switch (error) {
+    case AuthError.INVALID_LOGIN: {
+      return "login";
+    }
+    case AuthError.INVALID_EMAIL: {
+      return "email";
+    }
+    case AuthError.INVALID_PASSWORD: {
+      return "password";
+    }
+    default:
+      return "default";
+  }
 }
 
 const ObservableComponent = observer(Auth);

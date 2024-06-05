@@ -15,8 +15,8 @@ export class AuthRepository extends Repository {
     inject(this, "http", RestHttpClient.dependencyId());
   }
 
-  login() {
-    return this.http.post<AuthResponse>("/login", {});
+  login(login: string, email: string, password: string) {
+    return this.http.post<AuthResponse>("/login", { login, email, password });
   }
 
   logout() {

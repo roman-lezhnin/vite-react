@@ -1,5 +1,5 @@
 import { ok, err } from "neverthrow";
-import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
+import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
 import { Dependency } from "src/core/di/dependency";
 import type { NetworkResponse, NetworkResponseErrors } from "src/data/api";
 
@@ -63,7 +63,9 @@ export abstract class HttpClient extends Dependency {
         return err(response.data as NetworkResponseErrors);
       }
     } catch (error) {
-      console.error(error);
+      if (error instanceof AxiosError && error?.response?.data) {
+        return err(error.response.data);
+      }
       return err({ errors: [] });
     }
   }

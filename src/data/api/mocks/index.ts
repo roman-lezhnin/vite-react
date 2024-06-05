@@ -8,7 +8,7 @@ const handlers = [
       {
         errors: ["INVALID_EMAIL"],
       },
-      { status: 400 }
+      { status: 400 },
     );
   }),
   http.post(`${URL}/login/success`, () => {
@@ -16,7 +16,7 @@ const handlers = [
       {
         jwt: "c7b3d8e0-5e0b-4b0f-8b3a-3b9f4b3d3b3d",
       },
-      { status: 201 }
+      { status: 201 },
     );
   }),
   http.post(`${URL}/logout`, () => {
