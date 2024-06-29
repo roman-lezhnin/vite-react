@@ -3,9 +3,10 @@ module.exports = {
   env: { browser: true, es2020: true },
   extends: [
     "eslint:recommended",
-    "plugin:sonarjs/recommended-legacy",
     "plugin:@typescript-eslint/recommended",
     "plugin:react-hooks/recommended",
+    "plugin:sonarjs/recommended-legacy",
+    "plugin:security/recommended-legacy",
   ],
   ignorePatterns: ["dist", ".eslintrc.cjs"],
   parser: "@typescript-eslint/parser",

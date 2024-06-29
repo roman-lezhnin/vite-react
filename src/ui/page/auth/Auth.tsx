@@ -1,13 +1,13 @@
 import * as Yup from "yup";
 import React, { useMemo } from "react";
 import { observer } from "mobx-react-lite";
-import { redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { Formik, Form, Field, FormikErrors } from "formik";
 import { useDependency } from "src/core/di/container";
 import { AuthError } from "src/data/api/error/AuthError";
 import { AuthService } from "src/service/auth";
 import { Route } from "src/ui/router/path";
-import { mapErrors } from "src/ui/component/map-errors";
+import { toFormikErrors } from "src/ui/component/toFormikErrors";
 import FieldError from "src/ui/component/field-error";
 import styles from "./Auth.module.css";
 
@@ -38,16 +38,15 @@ function Auth(): JSX.Element {
   const { isPending, isSuccess, errors } = service;
 
   const apiErrors = useMemo(
-    () => mapErrors<AuthFormErrors>(errors, keySelector),
-    [errors],
+    () => toFormikErrors<AuthFormErrors>(errors, keySelector),
+    [errors]
   );
 
-  async function onSubmit({ login, email, password }: AuthFormData) {
-    await service.login(login, email, password);
-    if (isSuccess) {
-      redirect(Route.dashboard);
-    }
+  function onSubmit({ login, email, password }: AuthFormData) {
+    service.login(login, email, password);
   }
+
+  if (isSuccess) return <Navigate to={Route.order} />;
 
   return (
     <>
@@ -59,7 +58,7 @@ function Auth(): JSX.Element {
           validationSchema={validationSchema}
         >
           {({ touched, errors: formErrors }) => (
-            <Form className={styles.form}>
+            <Form className={styles.form} noValidate>
               <Field name="login" type="text" />
               {touched.login && (
                 <FieldError

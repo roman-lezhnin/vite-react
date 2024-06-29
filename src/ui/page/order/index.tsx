@@ -1,6 +1,6 @@
 import React, { Suspense, lazy, memo } from "react";
 
-const Component = lazy(() => import("./Dashboard"));
+const Component = lazy(() => import("./Order"));
 
 function Page(): JSX.Element {
   return (
@@ -10,6 +10,6 @@ function Page(): JSX.Element {
   );
 }
 
-const DashboardPage = memo(Page);
+const OrderPage = memo(Page);
 
-export default DashboardPage;
+export default OrderPage;

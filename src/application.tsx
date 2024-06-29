@@ -1,6 +1,7 @@
 import React from "react";
 import { configure } from "mobx";
 import { createRoot } from "react-dom/client";
+import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import type { Metric } from "web-vitals";
 import { CompositionRoot } from "src/core/di/composition-root";
@@ -15,11 +16,6 @@ export class WebApplication {
       observableRequiresReaction: true,
       disableErrorBoundaries: true,
     });
-    if (import.meta.env.DEV) {
-      import("./data/api/mocks").then(({ mockServer }) => {
-        mockServer.start();
-      });
-    }
   }
 
   private static render(): void {
@@ -27,7 +23,8 @@ export class WebApplication {
     root.render(
       <React.StrictMode>
         <RouterProvider router={router} />
-      </React.StrictMode>,
+        <ToastContainer />
+      </React.StrictMode>
     );
   }
 
@@ -41,7 +38,11 @@ export class WebApplication {
     }
   };
 
-  public static main(): void {
+  public static async main(): Promise<void> {
+    if (import.meta.env.DEV) {
+      const { mockServer } = await import("./data/api/mocks");
+      await mockServer.start();
+    }
     WebApplication.prepare();
     CompositionRoot.configure();
     WebApplication.render();

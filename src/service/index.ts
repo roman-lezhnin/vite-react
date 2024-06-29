@@ -48,8 +48,8 @@ export class ServiceViewModel extends Service {
   }
 
   @action.bound onError({ errors }: NetworkResponseErrors): void {
-    this.error();
     this.setErrors(errors);
+    this.error();
   }
 
   @action.bound onSuccess(): void {

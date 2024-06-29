@@ -3,9 +3,9 @@ import { from, groupByRecord } from "@szilanor/stream";
 
 type KeySelector = (entry: string) => string;
 
-export function mapErrors<T extends FormikErrors<Record<string, string>>>(
+export function toFormikErrors<T extends FormikErrors<Record<string, string>>>(
   errors: string[],
-  keySelector: KeySelector,
+  keySelector: KeySelector
 ): T {
   const mapped = from(errors).collect(groupByRecord(keySelector));
   const result: FormikErrors<Record<string, string>> = {};

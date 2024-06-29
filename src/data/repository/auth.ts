@@ -1,7 +1,7 @@
 import { RestHttpClient } from "src/data/api/rest";
 import { Repository } from "src/data/repository";
 import { inject } from "src/core/di/container";
-import type { AuthResponse } from "src/data/api/res/auth/auth";
+import type { AuthResponse } from "src/data/api/res/auth";
 
 export class AuthRepository extends Repository {
   static dependencyId(): symbol {
