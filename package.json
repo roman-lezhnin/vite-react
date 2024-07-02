@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest",
     "coverage": "vitest run --coverage",
+    "bench": "vitest bench",
     "format": "npx prettier --write ./src",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "storybook": "storybook dev -p 6006",
@@ -88,7 +89,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged",
-      "pre-push": "npm test -- --watchAll=false"
+      "pre-push": "vitest run"
     }
   },
   "msw": {
