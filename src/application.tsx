@@ -24,7 +24,7 @@ export class WebApplication {
       <React.StrictMode>
         <RouterProvider router={router} />
         <ToastContainer />
-      </React.StrictMode>
+      </React.StrictMode>,
     );
   }
 

@@ -2,15 +2,23 @@ import type { FormikErrors } from "formik";
 import { from, groupByRecord } from "@szilanor/stream";
 
 type KeySelector = (entry: string) => string;
+type Result = FormikErrors<Record<string, unknown>>;
 
-export function toFormikErrors<T extends FormikErrors<Record<string, string>>>(
+export function toFormikErrors(
   errors: string[],
-  keySelector: KeySelector
-): T {
+  keySelector: KeySelector,
+): Result {
+  const result: Result = {};
+  if (
+    !Array.isArray(errors) ||
+    errors.length < 1 ||
+    typeof keySelector !== "function"
+  ) {
+    return result;
+  }
   const mapped = from(errors).collect(groupByRecord(keySelector));
-  const result: FormikErrors<Record<string, string>> = {};
   for (const [key, value] of Object.entries(mapped)) {
     result[key] = value[0];
   }
-  return result as T;
+  return result;
 }

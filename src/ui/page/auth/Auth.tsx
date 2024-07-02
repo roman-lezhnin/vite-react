@@ -2,7 +2,7 @@ import * as Yup from "yup";
 import React, { useMemo } from "react";
 import { observer } from "mobx-react-lite";
 import { Navigate } from "react-router-dom";
-import { Formik, Form, Field, FormikErrors } from "formik";
+import { Formik, Form, Field } from "formik";
 import { useDependency } from "src/core/di/container";
 import { AuthError } from "src/data/api/error/AuthError";
 import { AuthService } from "src/service/auth";
@@ -16,7 +16,6 @@ type AuthFormData = {
   email: string;
   password: string;
 };
-type AuthFormErrors = FormikErrors<AuthFormData>;
 
 const initialValues: AuthFormData = { login: "", email: "", password: "" };
 const validationSchema = Yup.object().shape({
@@ -38,8 +37,8 @@ function Auth(): JSX.Element {
   const { isPending, isSuccess, errors } = service;
 
   const apiErrors = useMemo(
-    () => toFormikErrors<AuthFormErrors>(errors, keySelector),
-    [errors]
+    () => toFormikErrors(errors, keySelector),
+    [errors],
   );
 
   function onSubmit({ login, email, password }: AuthFormData) {

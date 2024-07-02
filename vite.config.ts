@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 
 export default defineConfig({
-  server: { cors: true },
+  server: { port: 8080, cors: true },
   resolve: { alias: { src: "/src" } },
   plugins: [
     react({

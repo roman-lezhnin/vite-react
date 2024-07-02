@@ -1,25 +1,28 @@
 import React from "react";
-import { mock, instance } from "ts-mockito";
+import { mock, instance, when } from "ts-mockito";
 import { render, screen } from "@testing-library/react";
 import { container } from "src/core/di/container";
 import { AuthService } from "src/service/auth";
 import App from "./Auth";
 
-describe("<App/>", () => {
-  const service = instance(mock(AuthService));
+describe("<Auth/>", () => {
+  const service = mock(AuthService);
 
   beforeEach(() => {
     container.snapshot();
-    container.bind<AuthService>(AuthService.dependencyId()).toValue(service);
+    container
+      .bind<AuthService>(AuthService.dependencyId())
+      .toValue(instance(service));
   });
 
   afterEach(() => {
     container.restore();
   });
 
-  test("renders learn react link", () => {
+  test("renders Logo in header", () => {
+    when(service.errors).thenReturn([]);
     render(<App />);
-    const linkElement = screen.getByText(/Learn React/i);
-    expect(linkElement.textContent).toBe("Learn React");
+    const header = screen.getByText(/Logo/i);
+    expect(header.textContent).toBe("Logo");
   });
 });

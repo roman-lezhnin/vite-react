@@ -6,6 +6,11 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
   },
+  resolve: {
+    alias: {
+      src: "/src",
+    },
+  },
   plugins: [
     react({
       babel: {
@@ -20,9 +25,4 @@ export default defineConfig({
       },
     }),
   ],
-  resolve: {
-    alias: {
-      src: "/src",
-    },
-  },
 });
