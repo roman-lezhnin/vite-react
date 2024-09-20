@@ -1,11 +1,11 @@
 import { toast } from "react-toastify";
 import React, { useEffect } from "react";
 import { observer } from "mobx-react-lite";
-import { useDependency } from "src/core/di/container";
+import { useDependency } from "src/core/di/useDependency";
 import { OrderService } from "src/service/order";
 
 function Order(): JSX.Element {
-  const service = useDependency<OrderService>(OrderService.dependencyId());
+  const service = useDependency<OrderService>("OrderService");
   const { isPending, isError, errors, orders } = service;
 
   useEffect(() => {

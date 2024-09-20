@@ -16,11 +16,11 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
-    "@owja/ioc": "^1.0.1",
     "@szilanor/stream": "^1.1.4",
     "axios": "^1.7.2",
     "classnames": "^2.5.1",
     "decimal.js": "^10.4.3",
+    "ecmascript-ioc": "^0.1.0",
     "formik": "^2.4.6",
     "mobx": "^6.12.3",
     "mobx-react-lite": "^4.0.7",

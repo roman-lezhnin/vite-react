@@ -1,13 +1,11 @@
 import { ok, err } from "neverthrow";
 import axios, { AxiosError, AxiosInstance, AxiosRequestConfig } from "axios";
-import { Dependency } from "src/core/di/dependency";
 import type { NetworkResponse, NetworkResponseErrors } from "src/data/api";
 
-export abstract class HttpClient extends Dependency {
+export abstract class HttpClient {
   protected http: AxiosInstance;
 
   constructor(options: AxiosRequestConfig) {
-    super();
     this.http = axios.create({
       baseURL: import.meta.env.VITE_API_URL,
       ...options,

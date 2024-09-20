@@ -1,6 +1,5 @@
-import { Dependency } from "src/core/di/dependency";
 import type { HttpClient } from "src/data/api/http";
 
-export abstract class Repository extends Dependency {
+export abstract class Repository {
   abstract readonly http: HttpClient;
 }

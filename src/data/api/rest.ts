@@ -1,10 +1,8 @@
+import { component } from "ecmascript-ioc";
 import { HttpClient } from "src/data/api/http";
 
+@component("RestHttpClient")
 export class RestHttpClient extends HttpClient {
-  static dependencyId(): symbol {
-    return Symbol.for("RestHttpClient");
-  }
-
   constructor() {
     super({
       responseType: "text",

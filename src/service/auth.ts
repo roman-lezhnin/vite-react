@@ -1,22 +1,15 @@
 import { observable, runInAction } from "mobx";
+import { autowired, service } from "ecmascript-ioc";
 import { ServiceViewModel } from "src/service";
-import { inject } from "src/core/di/container";
 import { AuthRepository } from "src/data/repository/auth";
 
+@service("AuthService")
 export class AuthService extends ServiceViewModel {
-  static dependencyId(): symbol {
-    return Symbol.for("AuthService");
-  }
-
+  @autowired("AuthRepository")
   readonly repository!: AuthRepository;
 
   @observable accessor isAuth: boolean = false;
   @observable accessor jwt: string = "";
-
-  constructor() {
-    super();
-    inject(this, "repository", AuthRepository.dependencyId());
-  }
 
   async login(login: string, email: string, password: string) {
     this.pending();

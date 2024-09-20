@@ -1,22 +1,15 @@
 import { observable, runInAction } from "mobx";
+import { autowired, service } from "ecmascript-ioc";
 import { ServiceViewModel } from "src/service";
-import { inject } from "src/core/di/container";
 import { OrderRepository } from "src/data/repository/order";
 import type { Order } from "src/data/model/order";
 
+@service("OrderService")
 export class OrderService extends ServiceViewModel {
-  static dependencyId(): symbol {
-    return Symbol.for("OrderService");
-  }
-
+  @autowired("OrderRepository")
   readonly repository!: OrderRepository;
 
   @observable accessor orders: Order[] = [];
-
-  constructor() {
-    super();
-    inject(this, "repository", OrderRepository.dependencyId());
-  }
 
   async getOrders() {
     this.pending();

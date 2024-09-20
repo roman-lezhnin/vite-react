@@ -3,7 +3,7 @@ import React, { useMemo } from "react";
 import { observer } from "mobx-react-lite";
 import { Navigate } from "react-router-dom";
 import { Formik, Form, Field } from "formik";
-import { useDependency } from "src/core/di/container";
+import { useDependency } from "src/core/di/useDependency";
 import { AuthError } from "src/data/api/error/AuthError";
 import { AuthService } from "src/service/auth";
 import { Route } from "src/ui/router/path";
@@ -33,7 +33,7 @@ const validationSchema = Yup.object().shape({
 });
 
 function Auth(): JSX.Element {
-  const service = useDependency<AuthService>(AuthService.dependencyId());
+  const service = useDependency<AuthService>("AuthService");
   const { isPending, isSuccess, errors } = service;
 
   const apiErrors = useMemo(

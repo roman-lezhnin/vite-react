@@ -1,9 +1,8 @@
 import { observable, computed, action } from "mobx";
-import { Dependency } from "src/core/di/dependency";
 import type { Repository } from "src/data/repository";
 import type { NetworkResponseErrors } from "src/data/api";
 
-export abstract class Service extends Dependency {
+export abstract class Service {
   abstract readonly repository: Repository;
 }
 

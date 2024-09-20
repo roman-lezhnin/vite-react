@@ -1,23 +1,22 @@
 import React from "react";
 import { mock, instance, when } from "ts-mockito";
 import { render, screen } from "@testing-library/react";
-import { container } from "src/core/di/container";
 import { AuthService } from "src/service/auth";
 import App from "./Auth";
 
 describe("<Auth/>", () => {
   const service = mock(AuthService);
 
-  beforeEach(() => {
-    container.snapshot();
-    container
-      .bind<AuthService>(AuthService.dependencyId())
-      .toValue(instance(service));
-  });
+  // beforeEach(() => {
+  //   container.snapshot();
+  //   container
+  //     .bind<AuthService>(AuthService.dependencyId())
+  //     .toValue(instance(service));
+  // });
 
-  afterEach(() => {
-    container.restore();
-  });
+  // afterEach(() => {
+  //   container.restore();
+  // });
 
   test("renders Logo in header", () => {
     when(service.errors).thenReturn([]);

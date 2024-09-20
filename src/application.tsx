@@ -4,7 +4,6 @@ import { createRoot } from "react-dom/client";
 import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import type { Metric } from "web-vitals";
-import { CompositionRoot } from "src/core/di/composition-root";
 import { router } from "src/ui/router";
 
 export class WebApplication {
@@ -44,7 +43,6 @@ export class WebApplication {
       await mockServer.start();
     }
     WebApplication.prepare();
-    CompositionRoot.configure();
     WebApplication.render();
     WebApplication.reportWebVitals();
   }
